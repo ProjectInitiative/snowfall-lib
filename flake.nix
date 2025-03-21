@@ -40,7 +40,8 @@
       lib = mkLib {
         inherit inputs src snowfall;
       };
-      flake-options = builtins.removeAttrs flake-and-lib-options ["inputs" "src"];
+      flake-options = builtins.removeAttrs flake-and-lib-options ["inputs" "src"]
+      // { supportedSystems = null; };
     in
       lib.mkFlake flake-options;
   in {
