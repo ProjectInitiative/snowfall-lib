@@ -5,7 +5,7 @@
   snowfall-config,
 }: let
   inherit (core-inputs.flake-utils-plus.lib) filterPackages;
-  inherit (core-inputs.nixpkgs.lib) assertMsg foldl mapAttrs callPackageWith;
+  inherit (core-inputs.nixpkgs.lib) assertMsg foldr mapAttrs callPackageWith;
 
   user-checks-root = snowfall-lib.fs.get-snowfall-file "checks";
 in {
@@ -47,7 +47,7 @@ in {
         // {
           ${metadata.name} = metadata.drv;
         };
-      checks-without-aliases = foldl merge-checks {} checks-metadata;
+      checks-without-aliases = foldr (metadata: checks:
       aliased-checks = mapAttrs (name: value: checks-without-aliases.${value}) alias;
       checks = checks-without-aliases // aliased-checks // overrides;
     in

@@ -4,7 +4,7 @@
   snowfall-lib,
   snowfall-config,
 }: let
-  inherit (core-inputs.nixpkgs.lib) assertMsg foldl concatStringsSep;
+  inherit (core-inputs.nixpkgs.lib) assertMsg foldr concatStringsSep;
 
   user-overlays-root = snowfall-lib.fs.get-snowfall-file "overlays";
   user-packages-root = snowfall-lib.fs.get-snowfall-file "packages";
@@ -141,14 +141,12 @@ in {
       );
 
       overlays =
-        foldl
-        create-overlay
-        {}
-        user-overlays;
+        foldr
+        (file: overlays: let
 
       user-packages = snowfall-lib.fs.get-default-nix-files-recursive packages-src;
 
-      create-package-overlay = package-overlays: file: let
+      create-package-overlay = file: package-overlays: let
         name = builtins.unsafeDiscardStringContext (snowfall-lib.path.get-parent-directory file);
         overlay = final: prev: let
           channels = channel-systems.${prev.stdenv.hostPlatform.system};
@@ -171,7 +169,7 @@ in {
         };
 
       package-overlays =
-        foldl
+        foldr
         create-package-overlay
         {}
         user-packages;

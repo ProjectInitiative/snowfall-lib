@@ -5,7 +5,7 @@
   snowfall-config,
 }: let
   inherit (builtins) baseNameOf;
-  inherit (core-inputs.nixpkgs.lib) assertMsg foldl mapAttrs;
+  inherit (core-inputs.nixpkgs.lib) assertMsg foldr mapAttrs;
 
   user-templates-root = snowfall-lib.fs.get-snowfall-file "templates";
 in {
@@ -42,7 +42,7 @@ in {
               inherit (metadata) path;
             };
         };
-      templates-without-aliases = foldl merge-templates {} templates-metadata;
+      templates-without-aliases = foldr (metadata: templates:
       aliased-templates = mapAttrs (name: value: templates-without-aliases.${value}) alias;
       unused-overrides = builtins.removeAttrs overrides (builtins.map (metadata: metadata.name) templates-metadata);
       templates = templates-without-aliases // aliased-templates // unused-overrides;

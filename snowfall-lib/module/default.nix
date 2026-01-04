@@ -5,7 +5,7 @@
   snowfall-config,
 }: let
   inherit (builtins) baseNameOf;
-  inherit (core-inputs.nixpkgs.lib) foldl mapAttrs hasPrefix hasSuffix isFunction splitString tail;
+  inherit (core-inputs.nixpkgs.lib) foldr mapAttrs hasPrefix hasSuffix isFunction splitString tail;
 
   user-modules-root = snowfall-lib.fs.get-snowfall-file "modules";
 in {
@@ -76,7 +76,7 @@ in {
           in
             user-module // {_file = metadata.path;};
         };
-      modules-without-aliases = foldl merge-modules {} modules-metadata;
+      modules-without-aliases = foldr (metadata: modules:
       aliased-modules = mapAttrs (name: value: modules-without-aliases.${value}) alias;
       modules = modules-without-aliases // aliased-modules // overrides;
     in

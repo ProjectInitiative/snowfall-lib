@@ -12,7 +12,7 @@
     mkOption
     mkDefault
     mkRenamedOptionModule
-    foldl
+    foldr
     optionalAttrs
     ;
 
@@ -101,6 +101,5 @@ in {
   };
 
   config = {
-    users.users = foldl create-system-users {} user-names;
-  };
+    users.users = foldr (name: system-users:
 }

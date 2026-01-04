@@ -10,7 +10,7 @@
     mapAttrsToList
     mapAttrs
     flatten
-    foldl
+    foldr
     recursiveUpdate
     mergeAttrs
     isDerivation
@@ -40,7 +40,7 @@ in {
     ## { x = 2; }
     ## ```
     #@ [Attrs] -> Attrs
-    merge-deep = foldl recursiveUpdate {};
+    merge-deep = foldr recursiveUpdate {};
 
     ## Merge the root of a list of attribute sets.
     ## Example Usage:
@@ -52,7 +52,7 @@ in {
     ## { x = 2; }
     ## ```
     #@ [Attrs] -> Attrs
-    merge-shallow = foldl mergeAttrs {};
+    merge-shallow = foldr mergeAttrs {};
 
     ## Merge shallow for packages, but allow one deeper layer of attribute sets.
     ## Example Usage:
@@ -65,9 +65,9 @@ in {
     ## ```
     #@ [Attrs] -> Attrs
     merge-shallow-packages = items:
-      foldl
+      foldr
       (
-        result: item:
+        item: result:
           result
           // (mapAttrs
             (

@@ -5,7 +5,7 @@
   snowfall-config,
 }: let
   inherit (builtins) dirOf baseNameOf;
-  inherit (core-inputs.nixpkgs.lib) assertMsg fix hasInfix concatMap foldl optionals singleton;
+  inherit (core-inputs.nixpkgs.lib) assertMsg fix hasInfix concatMap foldr optionals singleton;
 
   virtual-systems = import ./virtual-systems.nix;
 
@@ -76,9 +76,9 @@ in {
     ## ```
     #@ String -> String
     get-virtual-system-type = target:
-      foldl
+      foldr
       (
-        result: virtual-system:
+        virtual-system: result:
           if result == "" && hasInfix virtual-system target
           then virtual-system
           else result
@@ -311,9 +311,9 @@ in {
       };
       created-systems = fix (
         created-systems:
-          foldl
+          foldr
           (
-            systems: system-metadata:
+            system-metadata: systems:
               systems // (create-system' created-systems system-metadata)
           )
           {}

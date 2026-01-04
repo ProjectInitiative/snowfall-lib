@@ -4,7 +4,7 @@
   snowfall-lib,
   snowfall-config,
 }: let
-  inherit (core-inputs.nixpkgs.lib) assertMsg foldl filterAttrs const mapAttrs mapAttrs' hasSuffix removeSuffix nameValuePair;
+  inherit (core-inputs.nixpkgs.lib) assertMsg foldr filterAttrs const mapAttrs mapAttrs' hasSuffix removeSuffix nameValuePair;
 in rec {
   flake = rec {
     ## Remove the `self` attribute from an attribute set.
