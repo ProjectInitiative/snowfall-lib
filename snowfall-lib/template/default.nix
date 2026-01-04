@@ -33,16 +33,14 @@ in {
         path = template;
       };
       templates-metadata = builtins.map create-template-metadata user-templates;
-      merge-templates = templates: metadata:
-        templates
-        // {
+      templates-without-aliases = foldr (metadata: templates:
+        {
           ${metadata.name} =
             (overrides.${metadata.name} or {})
             // {
               inherit (metadata) path;
             };
-        };
-      templates-without-aliases = foldr (metadata: templates:
+        } // templates) {} templates-metadata;
       aliased-templates = mapAttrs (name: value: templates-without-aliases.${value}) alias;
       unused-overrides = builtins.removeAttrs overrides (builtins.map (metadata: metadata.name) templates-metadata);
       templates = templates-without-aliases // aliased-templates // unused-overrides;

@@ -36,9 +36,8 @@ in {
         path = module;
       };
       modules-metadata = builtins.map create-module-metadata user-modules;
-      merge-modules = modules: metadata:
-        modules
-        // {
+      modules-without-aliases = foldr (metadata: modules:
+        {
           # NOTE: home-manager *requires* modules to specify named arguments or it will not
           # pass values in. For this reason we must specify things like `pkgs` as a named attribute.
           ${metadata.name} = args @ {pkgs, ...}: let
@@ -75,8 +74,7 @@ in {
               else imported-user-module;
           in
             user-module // {_file = metadata.path;};
-        };
-      modules-without-aliases = foldr (metadata: modules:
+        } // modules) {} modules-metadata;
       aliased-modules = mapAttrs (name: value: modules-without-aliases.${value}) alias;
       modules = modules-without-aliases // aliased-modules // overrides;
     in

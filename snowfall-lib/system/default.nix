@@ -314,7 +314,7 @@ in {
           foldr
           (
             system-metadata: systems:
-              systems // (create-system' created-systems system-metadata)
+              (create-system' created-systems system-metadata) // systems
           )
           {}
           target-systems-metadata

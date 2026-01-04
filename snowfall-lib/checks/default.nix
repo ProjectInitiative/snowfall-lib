@@ -42,12 +42,10 @@ in {
         drv = callPackageWith extra-inputs check {};
       };
       checks-metadata = builtins.map create-check-metadata user-checks;
-      merge-checks = checks: metadata:
-        checks
-        // {
-          ${metadata.name} = metadata.drv;
-        };
       checks-without-aliases = foldr (metadata: checks:
+        {
+          ${metadata.name} = metadata.drv;
+        } // checks) {} checks-metadata;
       aliased-checks = mapAttrs (name: value: checks-without-aliases.${value}) alias;
       checks = checks-without-aliases // aliased-checks // overrides;
     in

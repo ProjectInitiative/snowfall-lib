@@ -68,8 +68,7 @@ in {
       foldr
       (
         item: result:
-          result
-          // (mapAttrs
+          (mapAttrs
             (
               name: value:
                 if isDerivation value
@@ -78,7 +77,7 @@ in {
                 then (result.${name} or {}) // value
                 else value
             )
-            item)
+            item) // result
       )
       {}
       items;

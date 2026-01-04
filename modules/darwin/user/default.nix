@@ -102,4 +102,11 @@ in {
 
   config = {
     users.users = foldr (name: system-users:
+      (optionalAttrs cfg.users.${name}.create {
+        ${name} = {
+          home = mkDefault cfg.users.${name}.home.path;
+          isHidden = mkDefault false;
+        };
+      }) // system-users) {} user-names;
+  };
 }

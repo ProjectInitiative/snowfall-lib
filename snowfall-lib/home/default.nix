@@ -225,7 +225,7 @@ in {
           });
       };
 
-      created-homes = foldr (home-metadata: homes: homes // (create-home' home-metadata)) {} target-homes-metadata;
+      created-homes = foldr (home-metadata: homes: (create-home' home-metadata) // homes) {} target-homes-metadata;
     in
       created-homes;
 

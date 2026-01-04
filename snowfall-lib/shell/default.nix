@@ -42,12 +42,10 @@ in {
         drv = callPackageWith extra-inputs shell {};
       };
       shells-metadata = builtins.map create-shell-metadata user-shells;
-      merge-shells = shells: metadata:
-        shells
-        // {
-          ${metadata.name} = metadata.drv;
-        };
       shells-without-aliases = foldr (metadata: shells:
+        {
+          ${metadata.name} = metadata.drv;
+        } // shells) {} shells-metadata;
       aliased-shells = mapAttrs (name: value: shells-without-aliases.${value}) alias;
       shells = shells-without-aliases // aliased-shells // overrides;
     in

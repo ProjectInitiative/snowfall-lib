@@ -121,4 +121,17 @@ in {
 
   config = {
     users.users = foldr (name: system-users:
+      (optionalAttrs cfg.users.${name}.create {
+        ${name} = {
+          isNormalUser = mkDefault true;
+
+          name = mkDefault name;
+
+          home = mkDefault cfg.users.${name}.home.path;
+          group = mkDefault "users";
+
+          extraGroups = optional cfg.users.${name}.admin "wheel";
+        };
+      }) // system-users) {} user-names;
+  };
 }

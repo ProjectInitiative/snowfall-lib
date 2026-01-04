@@ -95,7 +95,7 @@ in {
         };
 
       create-overlay = (
-        overlays: file: let
+        file: overlays: let
           name = builtins.unsafeDiscardStringContext (snowfall-lib.path.get-parent-directory file);
           overlay = final: prev: let
             channels = channel-systems.${prev.stdenv.hostPlatform.system};
@@ -134,15 +134,16 @@ in {
           if fake-overlay-result.__dontExport or false == true
           then overlays
           else
-            overlays
-            // {
+            {
               ${name} = overlay;
-            }
+            } // overlays
       );
 
       overlays =
         foldr
-        (file: overlays: let
+        create-overlay
+        {}
+        user-overlays;
 
       user-packages = snowfall-lib.fs.get-default-nix-files-recursive packages-src;
 
@@ -163,10 +164,9 @@ in {
               // {${name} = packages.${name};};
           };
       in
-        package-overlays
-        // {
+        {
           "package/${name}" = overlay;
-        };
+        } // package-overlays;
 
       package-overlays =
         foldr

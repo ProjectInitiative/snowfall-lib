@@ -59,12 +59,10 @@ in {
           };
       };
       packages-metadata = builtins.map create-package-metadata user-packages;
-      merge-packages = packages: metadata:
-        packages
-        // {
-          ${metadata.name} = metadata.drv;
-        };
       packages-without-aliases = foldr (metadata: packages:
+        {
+          ${metadata.name} = metadata.drv;
+        } // packages) {} packages-metadata;
       aliased-packages = mapAttrs (name: value: packages-without-aliases.${value}) alias;
       packages = packages-without-aliases // aliased-packages // overrides;
     in
